@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ivanvelickovski.imageoverlay.ZoomableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.ivanvelickovski.imageoverlay.ZoomableRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/rlZoomable">
+
+        <ImageView
+            android:id="@+id/ivAfter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/android2" />
+
+        <ImageView
+            android:id="@+id/ivBefore"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/android1"/>
+
+    </com.ivanvelickovski.imageoverlay.ZoomableRelativeLayout>
+
+    <View android:id="@+id/viewSlider"
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:background="@android:color/holo_green_dark"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"/>
+
+</com.ivanvelickovski.imageoverlay.ZoomableRelativeLayout>
