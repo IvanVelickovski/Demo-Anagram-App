@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|center"
+    tools:context=".UI.ChooseOptionFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="20sp"
+        android:id="@+id/txtChooseSource"
+        android:text="@string/choose_source"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtChooseSource"
+        android:id="@+id/btnLocalSource"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtChooseSource"
+        android:layout_toRightOf="@id/btnLocalSource"
+        android:id="@+id/btnRemoteSource"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtRemoteDataReady"
+        android:layout_below="@id/btnRemoteSource"
+        android:drawableRight="@android:drawable/presence_online"
+        android:text="@string/remote_data_downloaded"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtRemoteDataError"
+        android:layout_below="@id/btnRemoteSource"
+        android:drawableTint="@android:color/holo_red_dark"
+        android:drawableRight="@android:drawable/presence_offline"
+        android:text="@string/remote_data_error"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:textSize="10sp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        android:id="@+id/btnShowData"
+        android:text="@string/show_data"
+        android:layout_alignTop="@id/txtRemoteDataReady"
+        android:layout_alignRight="@id/txtChooseSource"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLocalDataReady"
+        android:layout_below="@id/txtRemoteDataReady"
+        android:drawableRight="@android:drawable/presence_online"
+        android:text="@string/local_data_ready"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtLocalDataError"
+        android:layout_below="@id/txtRemoteDataReady"
+        android:drawableTint="@android:color/holo_red_dark"
+        android:drawableRight="@android:drawable/presence_offline"
+        android:text="@string/local_data_error"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pbChoose"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

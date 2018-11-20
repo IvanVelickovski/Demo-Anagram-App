@@ -1,3 +1,22 @@
 <resources>
+
     <string name="app_name">WebFactoryDemoApp</string>
+    <string name="choose_source">Choose your preferred source:</string>
+    <string name="remote_data_downloaded">Remote data downloaded</string>
+    <string name="local_data_ready">Local data ready</string>
+    <string name="show_data">Show data</string>
+    <string name="book_title">Book title:</string>
+    <string name="book_description">Book description:</string>
+    <string name="remote_data_error">Error downloading data</string>
+    <string name="local_data_error">Local data error</string>
+    <string name="process_books">Process books</string>
+
+    <string-array name="source_options">
+        <item>Local</item>
+        <item>Remote</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
