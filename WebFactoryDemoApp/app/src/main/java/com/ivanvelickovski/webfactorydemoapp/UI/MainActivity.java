@@ -27,12 +27,32 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
 
         chooseOptionFragment = new ChooseOptionFragment();
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.flTop, chooseOptionFragment)
-                .commit();
-
         downloadFragment = new DownloadFragment();
         getSupportFragmentManager().beginTransaction().add(android.R.id.content, downloadFragment).commit();
+
+        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("books") != null) {
+            books = savedInstanceState.getParcelableArrayList("books");
+
+            if (savedInstanceState.getBoolean("booksShown")) {
+                showData();
+            }
+        } else if (savedInstanceState != null && savedInstanceState.getBoolean("downloadActive")) {
+            downloadFragment.startDownload();
+        }
+    }
+
+    private void initChooseOptionFragment(final Bundle savedInstanceState) {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.flTop, chooseOptionFragment)
+                .runOnCommit(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (savedInstanceState.getParcelableArrayList("books") != null && !savedInstanceState.getBoolean("booksShown")) {
+                            chooseOptionFragment.downloadProgressUpdate(1);
+                        }
+                    }
+                })
+                .commit();
     }
 
     @Override
@@ -83,5 +103,29 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
     @Override
     public void dataDownloadError() {
         chooseOptionFragment.remoteDataError();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (books != null && !books.isEmpty()) {
+            outState.putParcelableArrayList("books", books);
+
+            if (booksFragment != null) {
+                outState.putBoolean("booksShown", true);
+            }
+        } else if (downloadFragment.downloadIsActive()) {
+            outState.putBoolean("downloadActive", true);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        downloadFragment = null;
+        chooseOptionFragment = null;
+        booksFragment = null;
+        books = null;
     }
 }

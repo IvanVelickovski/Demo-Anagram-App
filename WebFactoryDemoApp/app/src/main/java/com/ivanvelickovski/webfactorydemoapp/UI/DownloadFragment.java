@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ public class DownloadFragment extends Fragment {
     private DownloadData downloadData;
     private static DownloadListener mListener;
     private static float progress;
+    private static boolean downloadActive;
 
     public DownloadFragment() {
         progress = 0;
@@ -39,9 +41,14 @@ public class DownloadFragment extends Fragment {
 
     public void startDownload() {
         if (downloadData == null || progress == 0) {
+            downloadActive = true;
             downloadData = new DownloadData();
             downloadData.execute();
         }
+    }
+
+    public boolean downloadIsActive() {
+        return downloadActive;
     }
 
     @Override
@@ -59,6 +66,18 @@ public class DownloadFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        downloadData = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("restart_download", true);
     }
 
     public interface DownloadListener {
@@ -103,6 +122,7 @@ public class DownloadFragment extends Fragment {
             }
 
             mListener.downloadProgress(progress);
+            downloadActive = false;
         }
     }
 }
