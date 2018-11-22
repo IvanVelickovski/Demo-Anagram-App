@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
             }
         } else if (savedInstanceState != null && savedInstanceState.getBoolean("downloadActive")) {
             downloadFragment.startDownload();
+        } else {
+            initChooseOptionFragment(savedInstanceState);
         }
     }
 
@@ -47,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
                 .runOnCommit(new Runnable() {
                     @Override
                     public void run() {
-                        if (savedInstanceState.getParcelableArrayList("books") != null && !savedInstanceState.getBoolean("booksShown")) {
+                        if (savedInstanceState != null
+                                && savedInstanceState.getParcelableArrayList("books") != null
+                                && !savedInstanceState.getBoolean("booksShown")) {
                             chooseOptionFragment.downloadProgressUpdate(1);
                         }
                     }

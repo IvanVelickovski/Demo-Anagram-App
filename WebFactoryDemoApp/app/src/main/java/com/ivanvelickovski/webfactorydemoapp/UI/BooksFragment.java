@@ -3,6 +3,10 @@ package com.ivanvelickovski.webfactorydemoapp.UI;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +27,7 @@ import java.util.HashMap;
 
 public class BooksFragment extends Fragment {
     private BooksListener mListener;
+    private ArrayList<String> anagrams = new ArrayList<>();
     private ArrayList<VolumeItem> books;
 
     @Override
@@ -49,11 +54,7 @@ public class BooksFragment extends Fragment {
         btnProcessBooks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> anagrams = processBooks();
-
-                if (anagrams != null && anagrams.size() > 0) {
-                    Toast.makeText(getContext(), "Found " + anagrams.size() / 2 + " anagrams", Toast.LENGTH_SHORT).show();
-                }
+                processBooks();
             }
         });
 
@@ -129,19 +130,31 @@ public class BooksFragment extends Fragment {
         return map;
     }
 
-    private ArrayList<String> processBooks() {
-        ArrayList<String> anagrams = new ArrayList<>();
+    private void processBooks() {
+        anagrams = new ArrayList<>();
 
         for (int i = 0; i < books.size(); i++) {
-            VolumeInfo book = books.get(i).getVolumeInfo();
+            final VolumeInfo book = books.get(i).getVolumeInfo();
+            final ArrayList<String> anagramsForBook = new ArrayList<>();
 
-            String[] titleStrings = splitWordWithoutPunctuation(book.getTitle());
-            String[] descriptionStrings = splitWordWithoutPunctuation(book.getDescription());
+            final HandlerThread handlerThread = new HandlerThread("booksThread");
+            handlerThread.run();
 
-            anagrams.addAll(findAnagramsForTitleDescPair(titleStrings, descriptionStrings));
+            final Handler handler = new Handler(handlerThread.getLooper(), new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    String[] titleStrings = splitWordWithoutPunctuation(book.getTitle());
+                    String[] descriptionStrings = splitWordWithoutPunctuation(book.getDescription());
+
+                    anagrams.addAll(findAnagramsForTitleDescPair(titleStrings, descriptionStrings));
+
+                    if (anagrams != null && anagrams.size() > 0) {
+                        Toast.makeText(getContext(), "Found " + anagrams.size() / 2 + " anagrams", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+            });
         }
-
-        return anagrams;
     }
 
     public interface BooksListener {
