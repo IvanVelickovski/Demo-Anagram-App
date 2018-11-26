@@ -1,20 +1,20 @@
 package com.ivanvelickovski.webfactorydemoapp.Threading;
 
-import android.widget.TextView;
+import java.util.ArrayList;
 
 public class AnalyzeResultUpdateTask implements Runnable {
-    private TextView message;
-    private String backgroundMsg;
+    private ArrayList<String> anagrams;
 
-    public AnalyzeResultUpdateTask(TextView msg){
-        message = msg;
+    public AnalyzeResultUpdateTask(ArrayList<String> anagrams){
+        this.anagrams = anagrams;
     }
-    public void setBackgroundMsg(String bmsg){
-        backgroundMsg = bmsg;
+
+    public void setAnagrams(ArrayList<String> anagrams){
+        this.anagrams = anagrams;
     }
 
     @Override
     public void run() {
-        message.setText(backgroundMsg);
+        // TODO
     }
 }

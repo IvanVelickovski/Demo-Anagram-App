@@ -1,7 +1,5 @@
 package com.ivanvelickovski.webfactorydemoapp.Threading;
 
-import android.widget.TextView;
-
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeInfo;
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeItem;
 
@@ -19,7 +17,8 @@ public class AnalyzeTask implements Runnable {
 
     @Override
     public void run() {
-        analyzeTextAndFindAllAnagrams();
+        ArrayList<String> anagrams = analyzeTextAndFindAllAnagrams();
+        resultUpdateTask.setAnagrams(anagrams);
     }
 
     private ArrayList<String> analyzeTextAndFindAllAnagrams() {
@@ -30,7 +29,7 @@ public class AnalyzeTask implements Runnable {
             anagrams.addAll(anagramsForBook(book));
         }
 
-        resultUpdateTask.setBackgroundMsg("Number of anagrams: " + anagrams.size());
+        //TODO: resultUpdateTask.setBackgroundMsg("Number of anagrams: " + anagrams.size());
         AnalyzeManager.getAnalyzeManager().getMainThreadExecutor().execute(resultUpdateTask);
 
         return anagrams;
@@ -87,8 +86,8 @@ public class AnalyzeTask implements Runnable {
             if (!map.containsKey(letter)) {
                 map.put(letter, 1);
             } else {
-                int numOccurencesOfLetter = map.get(letter);
-                map.put(letter, ++numOccurencesOfLetter);
+                int numOccurrencesOfLetter = map.get(letter);
+                map.put(letter, ++numOccurrencesOfLetter);
             }
         }
 
