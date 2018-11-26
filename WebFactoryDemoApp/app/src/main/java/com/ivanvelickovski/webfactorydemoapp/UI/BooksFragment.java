@@ -54,7 +54,11 @@ public class BooksFragment extends Fragment {
         btnProcessBooks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                processBooks();
+                anagrams = processBooks();
+
+                if (anagrams != null && anagrams.size() > 0) {
+                    Toast.makeText(getContext(), "Found " + anagrams.size() / 2 + " anagrams", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -130,31 +134,19 @@ public class BooksFragment extends Fragment {
         return map;
     }
 
-    private void processBooks() {
-        anagrams = new ArrayList<>();
+    private ArrayList<String> processBooks() {
+        ArrayList<String> anagramsForBook = new ArrayList<>();
 
         for (int i = 0; i < books.size(); i++) {
             final VolumeInfo book = books.get(i).getVolumeInfo();
-            final ArrayList<String> anagramsForBook = new ArrayList<>();
 
-            final HandlerThread handlerThread = new HandlerThread("booksThread");
-            handlerThread.run();
+            String[] titleStrings = splitWordWithoutPunctuation(book.getTitle());
+            String[] descriptionStrings = splitWordWithoutPunctuation(book.getDescription());
 
-            final Handler handler = new Handler(handlerThread.getLooper(), new Handler.Callback() {
-                @Override
-                public boolean handleMessage(Message msg) {
-                    String[] titleStrings = splitWordWithoutPunctuation(book.getTitle());
-                    String[] descriptionStrings = splitWordWithoutPunctuation(book.getDescription());
-
-                    anagrams.addAll(findAnagramsForTitleDescPair(titleStrings, descriptionStrings));
-
-                    if (anagrams != null && anagrams.size() > 0) {
-                        Toast.makeText(getContext(), "Found " + anagrams.size() / 2 + " anagrams", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }
-            });
+            anagramsForBook.addAll(findAnagramsForTitleDescPair(titleStrings, descriptionStrings));
         }
+
+        return anagramsForBook;
     }
 
     public interface BooksListener {
