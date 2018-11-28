@@ -28,9 +28,8 @@ import com.ivanvelickovski.webfactorydemoapp.Threading.AnalyzeTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class BooksFragment extends Fragment {
+public class BooksFragment extends Fragment implements AnalyzeResultUpdateTask.AnagramListener {
     private BooksListener mListener;
-    private ArrayList<String> anagrams = new ArrayList<>();
     private ArrayList<VolumeItem> books;
 
     @Override
@@ -45,7 +44,6 @@ public class BooksFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_books, container, false);
 
         RecyclerView recyclerView = v.findViewById(R.id.rvBooks);
@@ -57,7 +55,7 @@ public class BooksFragment extends Fragment {
         btnProcessBooks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnalyzeResultUpdateTask resultUpdateTask = new AnalyzeResultUpdateTask(anagrams);
+                AnalyzeResultUpdateTask resultUpdateTask = new AnalyzeResultUpdateTask(BooksFragment.this);
 
                 AnalyzeTask  analyzeTask = new AnalyzeTask(books, resultUpdateTask);
                 AnalyzeManager.getAnalyzeManager().runAnalyze(analyzeTask);
@@ -84,6 +82,13 @@ public class BooksFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onAnagramsSet(ArrayList<String> anagrams) {
+        Toast.makeText(getContext(),
+                "There are " + anagrams.size() / 2 + " anagrams!", Toast.LENGTH_SHORT).show();
+    }
+
     public interface BooksListener {
+        // TODO
     }
 }

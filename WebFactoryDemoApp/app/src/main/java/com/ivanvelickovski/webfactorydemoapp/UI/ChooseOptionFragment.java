@@ -173,6 +173,7 @@ public class ChooseOptionFragment extends Fragment implements View.OnClickListen
                 }
                 break;
             case R.id.btnShowData:
+                getView().setVisibility(View.GONE);
                 mListener.showData();
                 break;
         }
