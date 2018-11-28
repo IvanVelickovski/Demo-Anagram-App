@@ -2,17 +2,19 @@ package com.ivanvelickovski.webfactorydemoapp.Threading;
 
 import android.support.v4.app.Fragment;
 
+import com.ivanvelickovski.webfactorydemoapp.Model.Anagram;
+
 import java.util.ArrayList;
 
 public class AnalyzeResultUpdateTask implements Runnable {
-    private ArrayList<String> anagrams;
+    private ArrayList<Anagram> anagrams;
     private AnagramListener mListener;
 
     public AnalyzeResultUpdateTask(Fragment fragment) {
         this.mListener = (AnagramListener)fragment;
     }
 
-    public void setAnagrams(ArrayList<String> anagrams){
+    public void setAnagrams(ArrayList<Anagram> anagrams){
         this.anagrams = anagrams;
     }
 
@@ -22,6 +24,6 @@ public class AnalyzeResultUpdateTask implements Runnable {
     }
 
     public interface AnagramListener {
-        void onAnagramsSet(ArrayList<String> anagrams);
+        void onAnagramsSet(ArrayList<Anagram> anagrams);
     }
 }

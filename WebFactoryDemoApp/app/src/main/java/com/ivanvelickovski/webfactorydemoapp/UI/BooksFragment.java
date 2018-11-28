@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ivanvelickovski.webfactorydemoapp.Model.Anagram;
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeInfo;
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeItem;
 import com.ivanvelickovski.webfactorydemoapp.R;
@@ -83,9 +84,9 @@ public class BooksFragment extends Fragment implements AnalyzeResultUpdateTask.A
     }
 
     @Override
-    public void onAnagramsSet(ArrayList<String> anagrams) {
+    public void onAnagramsSet(ArrayList<Anagram> anagrams) {
         Toast.makeText(getContext(),
-                "There are " + anagrams.size() / 2 + " anagrams!", Toast.LENGTH_SHORT).show();
+                "There are " + anagrams.size() + " anagrams!", Toast.LENGTH_SHORT).show();
     }
 
     public interface BooksListener {

@@ -14,9 +14,10 @@ import com.ivanvelickovski.webfactorydemoapp.R;
 
 import java.util.ArrayList;
 
-public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder>  {
+public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder> {
     private ArrayList<VolumeItem> books;
     private Context context;
+    private BooksAdapterListener mListener;
 
     public BooksAdapter(ArrayList<VolumeItem> books) {
         this.books = books;
@@ -27,6 +28,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder> 
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         context = recyclerView.getContext();
+        mListener = (BooksAdapterListener)context;
     }
 
     @NonNull
@@ -48,9 +50,15 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder> 
         holder.txtDescriptionDesc.setText(bookInfo.getDescription());
 
         if (position % 2 == 0) {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_bright));
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.list_color_1));
+            holder.txtTitleDesc.setTextColor(context.getResources().getColor(R.color.text_color_list_bg_1));
+            holder.txtDescriptionDesc.setTextColor(context.getResources().getColor(R.color.text_color_list_bg_1));
+            mListener.setFragmentBackgroundColor(context.getResources().getColor(R.color.list_color_1));
         } else {
-            holder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_light));
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.list_color_2));
+            holder.txtTitleDesc.setTextColor(context.getResources().getColor(R.color.text_color_list_bg_2));
+            holder.txtDescriptionDesc.setTextColor(context.getResources().getColor(R.color.text_color_list_bg_2));
+            mListener.setFragmentBackgroundColor(context.getResources().getColor(R.color.list_color_2));
         }
     }
 
@@ -73,5 +81,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder> 
             txtDescriptionHeader = itemView.findViewById(R.id.txtBookDescriptionHeader);
             txtDescriptionDesc = itemView.findViewById(R.id.txtBookDescriptionDesc);
         }
+    }
+
+    public interface BooksAdapterListener {
+        void setFragmentBackgroundColor(int color);
     }
 }

@@ -1,8 +1,12 @@
 package com.ivanvelickovski.webfactorydemoapp.UI;
 
+import android.animation.ValueAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeData;
@@ -14,7 +18,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements ChooseOptionFragment.ChooseOptionListener,
-    DownloadFragment.DownloadListener, BooksFragment.BooksListener {
+    DownloadFragment.DownloadListener, BooksFragment.BooksListener, BooksAdapter.BooksAdapterListener {
     private DownloadFragment downloadFragment;
     private ChooseOptionFragment chooseOptionFragment;
     private BooksFragment booksFragment;
@@ -80,6 +84,24 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
         booksFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.flList, booksFragment)
+                .runOnCommit(new Runnable() {
+                    @Override
+                    public void run() {
+                        ValueAnimator animator = ValueAnimator.ofInt(chooseOptionFragment.getView().getHeight(), 0);
+
+                        animator.setTarget(chooseOptionFragment.getView());
+                        animator.setDuration(1500);
+                        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) chooseOptionFragment.getView().getLayoutParams();
+                                layoutParams.height = (int)animation.getAnimatedValue();
+                                chooseOptionFragment.getView().setLayoutParams(layoutParams);
+                            }
+                        });
+                        animator.start();
+                    }
+                })
                 .commit();
     }
 
@@ -131,5 +153,10 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
         chooseOptionFragment = null;
         booksFragment = null;
         books = null;
+    }
+
+    @Override
+    public void setFragmentBackgroundColor(int color) {
+        booksFragment.getView().setBackgroundColor(color);
     }
 }

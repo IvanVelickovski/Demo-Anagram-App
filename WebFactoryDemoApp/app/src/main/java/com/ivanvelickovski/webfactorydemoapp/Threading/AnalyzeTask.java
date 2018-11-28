@@ -1,5 +1,6 @@
 package com.ivanvelickovski.webfactorydemoapp.Threading;
 
+import com.ivanvelickovski.webfactorydemoapp.Model.Anagram;
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeInfo;
 import com.ivanvelickovski.webfactorydemoapp.Model.VolumeItem;
 
@@ -17,25 +18,24 @@ public class AnalyzeTask implements Runnable {
 
     @Override
     public void run() {
-        ArrayList<String> anagrams = analyzeTextAndFindAllAnagrams();
+        ArrayList<Anagram> anagrams = analyzeTextAndFindAllAnagrams();
         resultUpdateTask.setAnagrams(anagrams);
     }
 
-    private ArrayList<String> analyzeTextAndFindAllAnagrams() {
-        ArrayList<String> anagrams = new ArrayList<>();
+    private ArrayList<Anagram> analyzeTextAndFindAllAnagrams() {
+        ArrayList<Anagram> anagrams = new ArrayList<>();
 
         for (int i = 0; i < books.size(); i++) {
             final VolumeInfo book = books.get(i).getVolumeInfo();
             anagrams.addAll(anagramsForBook(book));
         }
 
-        //TODO: resultUpdateTask.setBackgroundMsg("Number of anagrams: " + anagrams.size());
         AnalyzeManager.getAnalyzeManager().getMainThreadExecutor().execute(resultUpdateTask);
 
         return anagrams;
     }
 
-    private ArrayList<String> anagramsForBook(VolumeInfo book) {
+    private ArrayList<Anagram> anagramsForBook(VolumeInfo book) {
         String[] titleStrings = splitWordWithoutPunctuation(book.getTitle());
         String[] descriptionStrings = splitWordWithoutPunctuation(book.getDescription());
 
@@ -48,18 +48,20 @@ public class AnalyzeTask implements Runnable {
                 .split(" ");
     }
 
-    private ArrayList<String> findAnagramsForTitleDescPair(String[] titleStrings, String[] descriptionStrings) {
-        ArrayList<String> anagrams = new ArrayList<>();
+    private ArrayList<Anagram> findAnagramsForTitleDescPair(String[] titleStrings, String[] descriptionStrings) {
+        ArrayList<Anagram> anagrams = new ArrayList<>();
 
-        for (String title : titleStrings) {
-            for (String description : descriptionStrings) {
+        for (int i = 0; i < titleStrings.length; i++) {
+            for (int j = 0; j < descriptionStrings.length; j++) {
+                String title = titleStrings[i];
+                String description = descriptionStrings[j];
+
                 if (title.length() != description.length()) {
                     // If words have different size, they are certainly not anagrams
                     continue;
                 } else if (title.equals(description)) {
                     // If words are equal, then they are anagrams
-                    anagrams.add(title);
-                    anagrams.add(description);
+                    anagrams.add(new Anagram(title, description, i, j));
                     continue;
                 }
 
@@ -70,8 +72,7 @@ public class AnalyzeTask implements Runnable {
                     // If word in title has same length as description
                     // And has same number of occurrences for a given letter as description
                     // Then these 2 words are anagrams for each other with equal hashmaps
-                    anagrams.add(title);
-                    anagrams.add(description);
+                    anagrams.add(new Anagram(title, description, i, j));
                 }
             }
         }
