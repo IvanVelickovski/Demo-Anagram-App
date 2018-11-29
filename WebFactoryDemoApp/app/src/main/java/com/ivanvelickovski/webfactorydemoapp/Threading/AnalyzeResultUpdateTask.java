@@ -5,16 +5,17 @@ import android.support.v4.app.Fragment;
 import com.ivanvelickovski.webfactorydemoapp.Model.Anagram;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AnalyzeResultUpdateTask implements Runnable {
-    private ArrayList<Anagram> anagrams;
+    private HashMap<Integer,ArrayList<Anagram>> anagrams;
     private AnagramListener mListener;
 
     public AnalyzeResultUpdateTask(Fragment fragment) {
         this.mListener = (AnagramListener)fragment;
     }
 
-    public void setAnagrams(ArrayList<Anagram> anagrams){
+    public void setAnagrams(HashMap<Integer,ArrayList<Anagram>> anagrams){
         this.anagrams = anagrams;
     }
 
@@ -24,6 +25,6 @@ public class AnalyzeResultUpdateTask implements Runnable {
     }
 
     public interface AnagramListener {
-        void onAnagramsSet(ArrayList<Anagram> anagrams);
+        void onAnagramsSet(HashMap<Integer,ArrayList<Anagram>> anagrams);
     }
 }

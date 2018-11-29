@@ -32,6 +32,8 @@ import java.util.HashMap;
 public class BooksFragment extends Fragment implements AnalyzeResultUpdateTask.AnagramListener {
     private BooksListener mListener;
     private ArrayList<VolumeItem> books;
+    private HashMap<Integer, ArrayList<Anagram>> anagrams = new HashMap<>();
+    BooksAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class BooksFragment extends Fragment implements AnalyzeResultUpdateTask.A
 
         if (getArguments() != null) {
             this.books = getArguments().getParcelableArrayList("books");
+            this.books.add(createDummyBook());
         }
     }
 
@@ -48,7 +51,8 @@ public class BooksFragment extends Fragment implements AnalyzeResultUpdateTask.A
         View v = inflater.inflate(R.layout.fragment_books, container, false);
 
         RecyclerView recyclerView = v.findViewById(R.id.rvBooks);
-        BooksAdapter adapter = new BooksAdapter(books);
+
+        adapter = new BooksAdapter(books, anagrams);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -83,10 +87,27 @@ public class BooksFragment extends Fragment implements AnalyzeResultUpdateTask.A
         mListener = null;
     }
 
+    private VolumeItem createDummyBook() {
+        VolumeInfo book = new VolumeInfo();
+        book.setTitle("Design Pattern");
+        book.setDescription("Signed copy of the book will be given to reptant");
+        return new VolumeItem(book);
+    }
+
     @Override
-    public void onAnagramsSet(ArrayList<Anagram> anagrams) {
+    public void onAnagramsSet(HashMap<Integer, ArrayList<Anagram>> anagrams) {
+        this.anagrams  = anagrams;
+        adapter.updateAnagrams(this.anagrams);
+
+        int numAnagrams = 0;
+        for (ArrayList<Anagram> anagramValues: anagrams.values()) {
+            for (Anagram anagram: anagramValues) {
+                numAnagrams++;
+            }
+        }
+
         Toast.makeText(getContext(),
-                "There are " + anagrams.size() + " anagrams!", Toast.LENGTH_SHORT).show();
+                "There are " + numAnagrams + " anagrams!", Toast.LENGTH_SHORT).show();
     }
 
     public interface BooksListener {

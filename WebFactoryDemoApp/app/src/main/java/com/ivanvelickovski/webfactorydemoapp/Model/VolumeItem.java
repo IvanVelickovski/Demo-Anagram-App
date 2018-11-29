@@ -76,6 +76,14 @@ public class VolumeItem implements Parcelable {
         }
     };
 
+    public VolumeItem(VolumeInfo bookInfo) {
+        kind = "Dummy book";
+        id = "DummyId";
+        etag = "DummyEtag";
+        selfLink = "https://dummyselflink.com";
+        volumeInfo = bookInfo;
+    }
+
     public VolumeItem(Parcel in) {
         kind = in.readString();
         id = in.readString();

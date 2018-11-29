@@ -18,16 +18,16 @@ public class AnalyzeTask implements Runnable {
 
     @Override
     public void run() {
-        ArrayList<Anagram> anagrams = analyzeTextAndFindAllAnagrams();
+        HashMap<Integer,ArrayList<Anagram>> anagrams = analyzeTextAndFindAllAnagrams();
         resultUpdateTask.setAnagrams(anagrams);
     }
 
-    private ArrayList<Anagram> analyzeTextAndFindAllAnagrams() {
-        ArrayList<Anagram> anagrams = new ArrayList<>();
+    private HashMap<Integer,ArrayList<Anagram>> analyzeTextAndFindAllAnagrams() {
+        HashMap<Integer,ArrayList<Anagram>> anagrams = new HashMap<>();
 
         for (int i = 0; i < books.size(); i++) {
             final VolumeInfo book = books.get(i).getVolumeInfo();
-            anagrams.addAll(anagramsForBook(book));
+            anagrams.put(i, anagramsForBook(book));
         }
 
         AnalyzeManager.getAnalyzeManager().getMainThreadExecutor().execute(resultUpdateTask);
