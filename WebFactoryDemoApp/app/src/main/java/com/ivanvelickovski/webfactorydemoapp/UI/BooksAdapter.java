@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,59 +52,51 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder> 
     public void onBindViewHolder(@NonNull BaseHolder holder, int position) {
         VolumeInfo bookInfo = books.get(position).getVolumeInfo();
 
-        holder.txtTitleHeader.setText(context.getResources().getString(R.string.book_title));
-        holder.txtDescriptionHeader.setText(context.getResources().getString(R.string.book_description));
-
         String title = bookInfo.getTitle();
         String description = bookInfo.getDescription();
 
         if (anagrams.get(position) != null) {
-            SpannableStringBuilder spanBuilderTitle = new SpannableStringBuilder(title);
-            SpannableStringBuilder spanBuilderDesc = new SpannableStringBuilder(description);
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(context.getResources().getColor(android.R.color.holo_red_dark));
-
-            String[] titleStrings = title.split(" ");
-            String[] descStrings = description.split(" ");
-
-            ArrayList<Anagram> anagramsOnPosition = anagrams.get(position);
-            ArrayList<Integer> titlesPositionsWithAnagrams = new ArrayList<>();
-            ArrayList<Integer> descPositionsWithAnagrams = new ArrayList<>();
-
-            for (Anagram anagram: anagramsOnPosition) {
-                titlesPositionsWithAnagrams.add(anagram.getTitlePosition());
-                descPositionsWithAnagrams.add(anagram.getDescriptionPosition());
-            }
-
-            for (Integer titlePositions : titlesPositionsWithAnagrams) {
-                int letterCountBeforeTitleWithAnagram = 0;
-
-                for (int i = 0; i < titlePositions; i++) {
-                    letterCountBeforeTitleWithAnagram += titleStrings[i].length();
-                }
-
-                int start = letterCountBeforeTitleWithAnagram + titlePositions;
-                int end = start + titleStrings[titlePositions].length();
-                spanBuilderTitle.setSpan(colorSpan, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            }
-
-            for (Integer descPositions : descPositionsWithAnagrams) {
-                int letterCountBeforeDescWithAnagram = 0;
-
-                for (int i = 0; i < descPositions; i++) {
-                    letterCountBeforeDescWithAnagram += descStrings[i].length();
-                }
-
-                int start = letterCountBeforeDescWithAnagram + descPositions;
-                int end = start + descStrings[descPositions].length();
-                spanBuilderDesc.setSpan(colorSpan, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            }
-
-            holder.txtTitleDesc.setText(spanBuilderTitle);
-            holder.txtDescriptionDesc.setText(spanBuilderDesc);
+            setViewHolderWithAnagram(holder, position, title, description);
         } else {
             holder.txtTitleDesc.setText(title);
             holder.txtDescriptionDesc.setText(description);
         }
+
+        setItemViewFromPosition(holder, position);
+    }
+
+    private void setViewHolderWithAnagram(@NonNull BaseHolder holder, int position, String title, String description) {
+        SpannableStringBuilder spanBuilderTitle = new SpannableStringBuilder(title);
+        SpannableStringBuilder spanBuilderDesc = new SpannableStringBuilder(description);
+
+        ArrayList<Anagram> anagramsAtPosition = anagrams.get(position);
+
+        if (anagramsAtPosition == null) {
+            // TODO: show error message
+            return;
+        }
+
+        for (Anagram singleAnagram : anagramsAtPosition) {
+            String titleAnagram = singleAnagram.getTitle();
+            String descAnagram = singleAnagram.getDescription();
+
+            int titleAnagramStartPosition = findStartIndexOfAnagramInText(singleAnagram.getTitleAnagramPosition(), title.split(" "));
+            int descAnagramStartPosition = findStartIndexOfAnagramInText(singleAnagram.getDescriptionAnagramPosition(), description.split(" "));
+
+            spanBuilderTitle.setSpan(new ForegroundColorSpan(context.getResources().getColor(android.R.color.holo_red_dark)),
+                    titleAnagramStartPosition, titleAnagramStartPosition + titleAnagram.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+            spanBuilderDesc.setSpan(new ForegroundColorSpan(context.getResources().getColor(android.R.color.holo_red_dark)),
+                    descAnagramStartPosition, descAnagramStartPosition + descAnagram.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+
+        holder.txtTitleDesc.setText(spanBuilderTitle);
+        holder.txtDescriptionDesc.setText(spanBuilderDesc);
+    }
+
+    private void setItemViewFromPosition(@NonNull BaseHolder holder, int position) {
+        holder.txtTitleHeader.setText(context.getResources().getString(R.string.book_title));
+        holder.txtDescriptionHeader.setText(context.getResources().getString(R.string.book_description));
 
         if (position % 2 == 0) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.list_color_1));
@@ -115,6 +109,16 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BaseHolder> 
             holder.txtDescriptionDesc.setTextColor(context.getResources().getColor(R.color.text_color_list_bg_2));
             mListener.setFragmentBackgroundColor(context.getResources().getColor(R.color.list_color_2));
         }
+    }
+
+    private int findStartIndexOfAnagramInText(int anagramIndexInStringList, String[] listOfStrings) {
+        int lengthOfWordsBeforeTitleAnagram = 0;
+
+        for (int i = 0; i < anagramIndexInStringList; i++) {
+            lengthOfWordsBeforeTitleAnagram += listOfStrings[i].length();
+        }
+
+        return anagramIndexInStringList + lengthOfWordsBeforeTitleAnagram;
     }
 
     @Override

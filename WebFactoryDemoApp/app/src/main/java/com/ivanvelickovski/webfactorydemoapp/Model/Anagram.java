@@ -5,12 +5,14 @@ public class Anagram {
     private String description;
     private int titlePosition;
     private int descriptionPosition;
+    private VolumeInfo book;
 
-    public Anagram(String title, String description, int titlePosition, int descriptionPosition) {
+    public Anagram(String title, String description, int titlePosition, int descriptionPosition, VolumeInfo book) {
         this.title = title;
         this.description = description;
         this.titlePosition = titlePosition;
         this.descriptionPosition = descriptionPosition;
+        this.book = book;
     }
 
     public String getDescription() {
@@ -29,7 +31,7 @@ public class Anagram {
         this.title = title;
     }
 
-    public int getTitlePosition() {
+    public int getTitleAnagramPosition() {
         return titlePosition;
     }
 
@@ -37,11 +39,19 @@ public class Anagram {
         this.titlePosition = titlePosition;
     }
 
-    public int getDescriptionPosition() {
+    public int getDescriptionAnagramPosition() {
         return descriptionPosition;
     }
 
     public void setDescriptionPosition(int descriptionPosition) {
         this.descriptionPosition = descriptionPosition;
+    }
+
+    public VolumeInfo getBook() {
+        return book;
+    }
+
+    public void setBook(VolumeInfo book) {
+        this.book = book;
     }
 }

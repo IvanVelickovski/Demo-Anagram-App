@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
         bundle.putParcelableArrayList("books", books);
         booksFragment = new BooksFragment();
         booksFragment.setArguments(bundle);
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.flList, booksFragment)
                 .runOnCommit(new Runnable() {
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
                         ValueAnimator animator = ValueAnimator.ofInt(chooseOptionFragment.getView().getHeight(), 0);
 
                         animator.setTarget(chooseOptionFragment.getView());
-                        animator.setDuration(1500);
+                        animator.setDuration(500);
                         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
@@ -109,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements ChooseOptionFragm
         try {
             byte[] bytes = new byte[inputStream.available()];
             inputStream.read(bytes, 0, bytes.length);
-            String json = new String(bytes);
-            return json;
+            return new String(bytes);
         } catch (IOException e) {
             return null;
         }

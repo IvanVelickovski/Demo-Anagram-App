@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">WebFactoryDemoApp</string>
+    <string name="app_name">Demo App</string>
     <string name="choose_source">Choose your preferred source:</string>
     <string name="remote_data_downloaded">Remote data downloaded</string>
     <string name="local_data_ready">Local data ready</string>
@@ -15,8 +15,5 @@
         <item>Local</item>
         <item>Remote</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
